@@ -157,7 +157,9 @@ void dataProviderUnlockCallback (void *info, const void *data, size_t size)
     GPUImageFilter *filter = (__bridge_transfer GPUImageFilter*)info;
     
     CVPixelBufferUnlockBaseAddress([filter renderTarget], 0);
-    CFRelease([filter renderTarget]);
+    if ([filter renderTarget]) {
+        CFRelease([filter renderTarget]);
+    }
 
     [filter destroyFilterFBO];
 
@@ -502,8 +504,8 @@ void dataProviderUnlockCallback (void *info, const void *data, size_t size)
     }
     
     [GPUImageOpenGLESContext setActiveShaderProgram:filterProgram];
-    [self setUniformsForProgramAtIndex:0];
     [self setFilterFBO];
+    [self setUniformsForProgramAtIndex:0];
     
     glClearColor(backgroundColorRed, backgroundColorGreen, backgroundColorBlue, backgroundColorAlpha);
     glClear(GL_COLOR_BUFFER_BIT);
